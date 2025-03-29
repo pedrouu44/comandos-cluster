@@ -1,0 +1,38 @@
+//saber qual é o nó primario
+rs.isMaster().primary
+
+//inserção de dados no nó
+use CorporeSystem
+
+db.cliente.insertOne({codigo:1, nome: "Ana Maria"});
+db.cliente.insertOne({codigo:2, nome: "Maria Jose"});
+db.cliente.insertOne({codigo:3, nome: "Jose Silva"});
+db.cliente.insertOne({codigo:4, nome: "Luis Souza"});
+db.cliente.insertOne({codigo:5, nome: "Fernanda Silva"});
+
+db.cliente.find()
+
+  //parar o nó no docker
+docker stop mongo10
+
+//verificar o estado do cluster
+docker exec -it mongo20 mongosh --eval "rs.status()"
+
+  //tentar inserir mais um dado
+  db.cliente.insertOne({codigo:6, nome: "Teresa Maria"});
+
+//abrir uma nova conexão no mongodb
+
+//consulta do registro
+use CorporeSystem
+
+db.cliente.findOne()
+
+  //nova inserção de dados para ver se o cluster está ativo
+db.cliente.insertOne({codigo:7, nome: "Joao Cardoso"});
+
+//reestabelecendo do nó pelo cluster
+docker run -d --rm -p 27017:27017 --name mongo10 --network mongoCluster mongodb/mongodb-community-server:latest --replSet myReplicaSet --bind_ip localhost,mongo10
+
+  //verificação do cluster
+  docker exec -it mongo20 mongosh --eval "rs.status()"
