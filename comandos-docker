@@ -1,0 +1,28 @@
+//criação da rede docker
+docker network create mongoCluster
+
+//primeiro container/nó
+docker run -d --rm -p 27017:27017 --name mongo10 --network mongoCluster mongodb/mongodb-community-server:latest --replSet myReplicaSet --bind_ip localhost,mongo10
+
+  //segundo
+  docker run -d --rm -p 27018:27017 --name mongo20 --network mongoCluster mongodb/mongodb-community-server:latest --replSet myReplicaSet --bind_ip localhost,mongo20
+
+  //terceiro
+docker run -d --rm -p 27019:27017 --name mongo30 --network mongoCluster mongodb/mongodb-community-server:latest --replSet myReplicaSet --bind_ip localhost,mongo30
+
+  //quarto
+  docker run -d --rm -p 27020:27017 --name mongo40 --network mongoCluster mongodb/mongodb-community-server:latest --replSet myReplicaSet --bind_ip localhost,mongo40
+
+  //entrar no container pelo mongosh
+  docker exec -it mongo10 mongosh
+
+//verificar se o container está funcionando
+db.runCommand ({hello:1})
+
+//"sincroniza" os nós
+rs.initiate ({ _id: "myReplicaSet", members:[{_id:0, host: "mongo10"}, {_id:1, host: "mongo20"}, {_id:2, host: "mongo30"}, {_id:3, host: "mongo40"}]})
+
+  //teste das replicas
+  docker exec -it mongo10 mongosh --eval "rs.status()"
+
+
