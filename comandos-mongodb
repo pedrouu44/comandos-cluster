@@ -4,11 +4,11 @@ rs.isMaster().primary
 //inserção de dados no nó
 use CorporeSystem
 
-db.cliente.insertOne({codigo:1, nome: "Ana Maria"});
-db.cliente.insertOne({codigo:2, nome: "Maria Jose"});
-db.cliente.insertOne({codigo:3, nome: "Jose Silva"});
-db.cliente.insertOne({codigo:4, nome: "Luis Souza"});
-db.cliente.insertOne({codigo:5, nome: "Fernanda Silva"});
+db.cliente.insertOne({codigo:1, nome: "Pedro"});
+db.cliente.insertOne({codigo:2, nome: "Yuri"});
+db.cliente.insertOne({codigo:3, nome: "Hugo"});
+db.cliente.insertOne({codigo:4, nome: "Sofia"});
+db.cliente.insertOne({codigo:5, nome: "Julia"});
 
 db.cliente.find()
 
@@ -19,7 +19,7 @@ docker stop mongo10
 docker exec -it mongo20 mongosh --eval "rs.status()"
 
   //tentar inserir mais um dado
-  db.cliente.insertOne({codigo:6, nome: "Teresa Maria"});
+  db.cliente.insertOne({codigo:6, nome: "Maria"});
 
 //abrir uma nova conexão no mongodb
 
@@ -29,7 +29,7 @@ use CorporeSystem
 db.cliente.findOne()
 
   //nova inserção de dados para ver se o cluster está ativo
-db.cliente.insertOne({codigo:7, nome: "Joao Cardoso"});
+db.cliente.insertOne({codigo:7, nome: "Joao"});
 
 //reestabelecendo do nó pelo cluster
 docker run -d --rm -p 27017:27017 --name mongo10 --network mongoCluster mongodb/mongodb-community-server:latest --replSet myReplicaSet --bind_ip localhost,mongo10
